@@ -1,3 +1,4 @@
+import Head from "next/head";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { searchMovies, selectMovies } from "../store/action/movie";
@@ -21,31 +22,38 @@ const App = () => {
   }
 
   return (
-    <div className="app">
-      <h1>MovieLand</h1>
-      <div className="search">
-        <input
-          type="text"
-          placeholder="Search for a movie"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <Image
-          src={searchIcon}
-          alt="search-icon"
-          onClick={() => dispatch(searchMovies(search))}
-        />
-      </div>
-      {movies?.length > 0 ? (
-        <div className="container">
-          {movies?.map((movie: any) => (
-            <MovieCard key={movie.imdbID} movie={movie} />
-          ))}
+    <>
+      <Head>
+        <title>MovieLand</title>
+        <meta name="description" content="MovieLand" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="app">
+        <h1>MovieLand</h1>
+        <div className="search">
+          <input
+            type="text"
+            placeholder="Search for a movie"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Image
+            src={searchIcon}
+            alt="search-icon"
+            onClick={() => dispatch(searchMovies(search))}
+          />
         </div>
-      ) : (
-        <p>No results found.</p>
-      )}
-    </div>
+        {movies?.length > 0 ? (
+          <div className="container">
+            {movies?.map((movie: any) => (
+              <MovieCard key={movie.imdbID} movie={movie} />
+            ))}
+          </div>
+        ) : (
+          <p>No results found.</p>
+        )}
+      </div>
+    </>
   );
 };
 
