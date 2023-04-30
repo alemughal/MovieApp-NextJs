@@ -1,0 +1,95 @@
+To use this code in redux-toolkit, you'll need to create a `slice` and set up the actions and reducers. Here's an example of how you can modify the component code to use redux-toolkit:
+
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { searchMoviesAsync, selectMovies } from "./moviesSlice";
+import MovieCard from "./MovieCard";
+import searchIcon from "./search.svg";
+import "./App.css";
+
+const App = () => {
+  const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
+  const movies = useSelector(selectMovies);
+
+  useEffect(() => {
+    dispatch(searchMoviesAsync("Spiderman"));
+  }, [dispatch]);
+
+  return (
+    <div className="app">
+      <h1>MovieLand</h1>
+      <div className="search">
+        <input
+          type="text"
+          placeholder="Search for a movie"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <img
+          src={searchIcon}
+          alt="search-icon"
+          onClick={() => dispatch(searchMoviesAsync(search))}
+        />
+      </div>
+      {movies.length > 0 ? (
+        <div className="container">
+          {movies.map((movie) => (
+            <MovieCard key={movie.imdbID} movie={movie} />
+          ))}
+        </div>
+      ) : (
+        <p>No results found.</p>
+      )}
+    </div>
+  );
+};
+
+export default App;
+
+In this modified code, we can see that we are using the `useSelector` hook from `react-redux` to grab the `movies` state from the store. We're also using the `useDispatch` hook to dispatch the `searchMoviesAsync` action when the user clicks the search icon. 
+
+The `searchMoviesAsync` action is defined in a `moviesSlice` file like this:
+
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"; 
+const API_URL = "http://www.omdbapi.com/?i=tt3896198&apikey=a70530df";
+
+export const searchMoviesAsync = createAsyncThunk(
+  "movies/searchMovies",
+  async (title) => {
+    const response = await fetch(`${API_URL}&s=${title}`);
+    const data = await response.json();
+    if (data.Response === "True") {
+      return data.Search;
+    } else {
+      throw new Error(data.Error);
+    }
+  }
+);
+
+const moviesSlice = createSlice({
+  name: "movies",
+  initialState: [],
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(searchMoviesAsync.pending, (state, action) => {
+        // handle pending state
+      })
+      .addCase(searchMoviesAsync.fulfilled, (state, action) => {
+        return action.payload;
+      })
+      .addCase(searchMoviesAsync.rejected, (state, action) => {
+        // handle error state
+      });
+  },
+});
+
+export const selectMovies = (state) => state.movies;
+export default moviesSlice.reducer;
+
+In this `moviesSlice` file, we're defining the `searchMoviesAsync` action using `createAsyncThunk`. This is a special function provided by redux-toolkit that lets us define an asynchronous action that can dispatch multiple actions during its lifecycle: `pending`, `fulfilled`, and `rejected`. 
+
+We're also defining a `movies` slice, which has an `initialState` of an empty array. We're using the `extraReducers` property to handle the `searchMoviesAsync` action. When the action is pending, we can update the state to reflect that. When it's fulfilled, we update the `movies` state to hold the search results. When it's rejected, we can handle the error state (although we haven't defined that here). 
+
+Finally, we're exporting a `selectMovies` selector that can be used to grab the `movies` state from the store.
