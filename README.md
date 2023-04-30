@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-```Live App
+Live App
 
 [MovieLand](https://movie-land-nextjs.vercel.app/)
 
