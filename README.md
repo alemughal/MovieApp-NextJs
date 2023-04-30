@@ -4,7 +4,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ```Live App
 
-[Movie Land](https://movie-land-nextjs.vercel.app/)
+[MovieLand](https://movie-land-nextjs.vercel.app/)
 
 
 First, run the development server:
