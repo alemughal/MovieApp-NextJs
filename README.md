@@ -2,6 +2,11 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+```Live App
+
+[Movie Land](https://movie-land-nextjs.vercel.app/)
+
+
 First, run the development server:
 
 ```bash
